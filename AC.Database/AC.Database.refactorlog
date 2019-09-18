@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Operations Version="1.0" xmlns="http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02">
+  <Operation Name="Rename Refactor" Key="4d496b1a-2f7e-4d26-a316-cd024a3a281a" ChangeDateTime="01/04/2019 11:42:25">
+    <Property Name="ElementName" Value="[graph].[Graph].[ConnectedGraphId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[graph].[Graph]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ConnectionId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="bee98ce9-cd08-4f2f-b72e-a58d196331b6" ChangeDateTime="01/04/2019 16:11:37">
+    <Property Name="ElementName" Value="[connection].[Connection].[Data]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[connection].[Connection]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="OverwritesId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="5acea54a-bfde-469f-923d-02a86c7da4d7" ChangeDateTime="02/26/2019 14:40:53">
+    <Property Name="ElementName" Value="[connection].[Connection].[ConnectionTypeId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[connection].[Connection]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ConnectionTypeIdFromA2B" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="a9a5d096-0975-448a-a7d0-662139451664" ChangeDateTime="02/26/2019 14:41:20">
+    <Property Name="ElementName" Value="[connection].[Connection].[ConnectionTypeIdFromA2B]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[connection].[Connection]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="A2BConnectionTypeId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="e7639a01-5623-48c4-b9eb-527926f72692" ChangeDateTime="02/26/2019 14:41:37">
+    <Property Name="ElementName" Value="[connection].[Connection].[ConnectionDirectionID]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[connection].[Connection]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="B2AConnectionTypeId" />
+  </Operation>
+</Operations>

@@ -1,0 +1,50 @@
+﻿<UserControl x:Class="AC.Desktop.Main.Views.MainView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:res ="clr-namespace:AC.Desktop.Main.Resources.Local"
+             mc:Ignorable="d" 
+             xmlns:vm="clr-namespace:AC.Desktop.Main.ViewModels"
+             d:DataContext="{d:DesignInstance vm:MainViewModel}"
+             Height="auto"
+             Width="auto">
+    <Grid >
+        <Grid.RowDefinitions>
+            <RowDefinition Style="{StaticResource top-panel-height}"></RowDefinition>
+            <RowDefinition Height="300"></RowDefinition>
+            <RowDefinition Height="300"></RowDefinition>
+        </Grid.RowDefinitions>
+        
+        <Grid Grid.Row="0" Background="{StaticResource top-panel-background-color}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="150" ></ColumnDefinition>
+                <ColumnDefinition Width="150"></ColumnDefinition>
+                <ColumnDefinition Width="150"></ColumnDefinition>
+                <ColumnDefinition Width="150"></ColumnDefinition>
+                <ColumnDefinition Width="150"></ColumnDefinition>
+                <ColumnDefinition Width="150"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Button  Command="{Binding GraphsDialogCommand, UpdateSourceTrigger=PropertyChanged}" Content="{x:Static res:Strings.Graphs}" Style="{StaticResource ResourceKey=rounded-button-style}"></Button>
+            <Button Grid.Column="1" Command="{Binding NodesDialogCommand, UpdateSourceTrigger=PropertyChanged}" Content="{x:Static res:Strings.Nodes}" Style="{StaticResource ResourceKey=rounded-button-style}"></Button>
+            <Button Grid.Column="2" Command="{Binding ConnectionsDialogCommand, UpdateSourceTrigger=PropertyChanged}" Content="{x:Static res:Strings.Connections}" Style="{StaticResource ResourceKey=rounded-button-style}"></Button>
+            <Button Grid.Column="3" Command="{Binding ConnectionTypesDialogCommand, UpdateSourceTrigger=PropertyChanged}" Content="{x:Static res:Strings.ConnectionTypes}" Style="{StaticResource ResourceKey=rounded-button-style}"></Button>
+            <Button Grid.Column="4" Command="{Binding AttribuetsDialogCommand, UpdateSourceTrigger=PropertyChanged}" Content="{x:Static res:Strings.Attributes}" Style="{StaticResource ResourceKey=rounded-button-style}"></Button>
+            <Button Grid.Column="5" Command="{Binding AttribuetsDialogCommand, UpdateSourceTrigger=PropertyChanged}" Content="{x:Static res:Strings.StartSession}" Style="{StaticResource ResourceKey=rounded-button-style}"></Button>
+        </Grid>
+        
+        <Grid Grid.Row="1">
+            <StackPanel>
+                <Label Content="{x:Static res:Strings.Agent}" Margin="10"/>
+                <TextBox Grid.Row="1" Margin="10" Height="400" Width="Auto" TextWrapping="Wrap" IsReadOnly="True"></TextBox>
+            </StackPanel>
+        </Grid>
+
+        <Grid Grid.Row="2">
+            <StackPanel>
+                <Label Content="{x:Static res:Strings.User}" Margin="10"/>
+                <TextBox Grid.Row="1" Margin="10" Height="400" Width="Auto" TextWrapping="Wrap"></TextBox>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</UserControl>

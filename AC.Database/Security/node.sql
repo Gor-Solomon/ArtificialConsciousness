@@ -1,0 +1,3 @@
+﻿CREATE SCHEMA [node]
+    AUTHORIZATION [dbo];
+

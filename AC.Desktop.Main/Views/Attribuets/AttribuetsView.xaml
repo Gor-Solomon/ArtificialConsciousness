@@ -1,0 +1,55 @@
+﻿<UserControl x:Class="AC.Desktop.Main.Views.Attribuets.AttribuetsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:AC.Desktop.Main.Views.Attribuets"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:vm="clr-namespace:AC.Desktop.Main.ViewModels.Attribuets"
+             xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:localRes ="clr-namespace:AC.Desktop.Main.Resources.Local"
+             xmlns:res="clr-namespace:AC.Desktop.Controls"         
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             mc:Ignorable="d" 
+             mah:DialogParticipation.Register="{Binding}"
+             d:DataContext="{d:DesignInstance vm:AttribuetsViewModel}"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadControlCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <Grid >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1.5*"/>
+            <ColumnDefinition Width="3*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid Style="{StaticResource base-grid-style}">
+            <ContentControl Grid.Column="0" Content="{Binding SideBar.View}" />
+        </Grid>
+
+        <Grid Grid.Column="1" Style="{StaticResource base-grid-style}">
+            <Grid.RowDefinitions>
+                <RowDefinition  Height="auto"/>
+                <RowDefinition  Height="auto"/>
+                <RowDefinition  Height="*"/>
+                <RowDefinition Height="50"/>
+            </Grid.RowDefinitions>
+
+
+            <StackPanel Grid.Row="0" Orientation="Horizontal" Style="{StaticResource base-panel-style}">
+                <Label Content="{x:Static localRes:Strings.AttribuetName}" Width="100"/>
+                <TextBox  Style="{StaticResource rounded-text-box-style}" Text="{Binding AttributeDescriptionModel.Name, UpdateSourceTrigger=PropertyChanged}"/>
+            </StackPanel>
+
+            <StackPanel Grid.Row="1" Orientation="Horizontal" Style="{StaticResource base-panel-style}">
+                <Label Content="{x:Static localRes:Strings.Description}" Width="100"/>
+                <TextBox  Style="{StaticResource rounded-text-box-style}" Text="{Binding AttributeDescriptionModel.Description, UpdateSourceTrigger=PropertyChanged}"/>
+            </StackPanel>
+
+            <Button Grid.Row="3"  Style="{StaticResource save-btn}" HorizontalAlignment="Left" Command="{Binding SaveCommand}" />
+
+        </Grid>
+    </Grid>
+</UserControl>

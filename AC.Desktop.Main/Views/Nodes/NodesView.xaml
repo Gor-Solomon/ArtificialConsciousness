@@ -1,0 +1,142 @@
+﻿<UserControl x:Class="AC.Desktop.Main.Views.Nodes.NodesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:AC.Desktop.Main.Views.Nodes"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:vm="clr-namespace:AC.Desktop.Main.ViewModels.Nodes"
+             xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:localRes ="clr-namespace:AC.Desktop.Main.Resources.Local"
+             xmlns:res="AC.Desktop.Controls"         
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="1200" 
+             mah:DialogParticipation.Register="{Binding}"
+             d:DataContext="{d:DesignInstance vm:NodesViewModel}">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadControlCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <Grid >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1.5*"/>
+            <ColumnDefinition Width="3*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid Style="{StaticResource base-grid-style}">
+            <ContentControl Grid.Column="0" Content="{Binding SideBar.View}" />
+        </Grid>
+
+        <Grid Grid.Column="1" Style="{StaticResource base-grid-style}">
+            <Grid.RowDefinitions>
+                <RowDefinition  Height="auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="50"/>
+            </Grid.RowDefinitions>
+
+
+            <StackPanel Orientation="Horizontal">
+                <!--<Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>-->
+
+                <StackPanel HorizontalAlignment="Left" Width="280" >
+                <StackPanel  Orientation="Horizontal" Style="{StaticResource base-panel-style}">
+                 <Label Content="{x:Static localRes:Strings.NodeName}" Width="100"/>
+                     <TextBox  Style="{StaticResource rounded-text-box-style}" Text="{Binding SelectedNodeModel.Name, UpdateSourceTrigger=PropertyChanged}"/>
+                </StackPanel>
+
+                
+
+                <StackPanel  Orientation="Horizontal" Style="{StaticResource base-panel-style}">
+                    <Label   Content="{x:Static localRes:Strings.Graph}" Width="100"/>
+                    <ComboBox Style="{StaticResource {x:Type ComboBox}}"
+                      ItemsSource="{Binding GraphModels, UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}"
+                      SelectedValue="{Binding SelectedGraph, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      DisplayMemberPath="DisplayName"
+                      IsEditable="True"
+                      Width="120">
+                    </ComboBox>
+                </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Style="{StaticResource base-panel-style}">
+                        <Label Content="{x:Static localRes:Strings.Data}" Width="100" />
+                        <TextBox  Style="{StaticResource rounded-text-box-style}" Text="{Binding SelectedNodeModel.Data, UpdateSourceTrigger=PropertyChanged}" MaxWidth="170" Height="50" TextWrapping="Wrap" />
+                    </StackPanel>
+                </StackPanel>
+    
+                
+                    <StackPanel Style="{StaticResource base-panel-style}" Width="300" >
+                        <DataGrid CanUserSortColumns="False" CanUserDeleteRows="True"
+                          AutoGenerateColumns="False" 
+                          Style="{StaticResource data-grid-view-style}"
+                          CanUserAddRows="True"
+                          ItemsSource="{Binding SelectedNodeModel.NodeAttributes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          >
+                            <DataGrid.Columns>
+                                <DataGridComboBoxColumn Header="{x:Static localRes:Strings.NodeAttributes}"
+                                                Width="*"
+                                                SelectedValueBinding="{Binding Id, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                SelectedValuePath="Id"
+                                                DisplayMemberPath="DisplayName">
+                                    <DataGridComboBoxColumn.ElementStyle>
+                                        <Style TargetType="{x:Type ComboBox}">
+                                            <Setter Property="ItemsSource" Value="{Binding Path=DataContext.Attribuets, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                                        </Style>
+                                    </DataGridComboBoxColumn.ElementStyle>
+                                    <DataGridComboBoxColumn.EditingElementStyle>
+                                        <Style TargetType="{x:Type ComboBox}">
+                                            <Setter Property="ItemsSource" Value="{Binding Path=DataContext.Attribuets, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                                        </Style>
+                                    </DataGridComboBoxColumn.EditingElementStyle>
+
+                                </DataGridComboBoxColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+             
+            </StackPanel>
+
+            <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10 25 5 5" CanVerticallyScroll="True" >
+                <StackPanel Margin="0 0 40 0" >
+                    <Label Content="{x:Static localRes:Strings.ConnectionsFrom}"></Label>
+                    <ListView Width="Auto" ItemsSource="{Binding SelectedNodeModel.ConnectionsFrom, UpdateSourceTrigger=PropertyChanged}" ItemContainerStyle="{StaticResource list-View-Item-Style}"  Style="{StaticResource base-list-view-style}" >
+                     <ListView.View >
+                        <GridView>
+                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding Id, UpdateSourceTrigger=PropertyChanged}" Header="Id"/>
+                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding NodeB.DisplayName, UpdateSourceTrigger=PropertyChanged}" Header="Node"/>
+                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding A2BConnectionType.DisplayName}" Header="Connection Type"/>
+                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding WeightA2B, StringFormat=N2}" Header="Weight"/>
+                        </GridView>
+                     </ListView.View>
+                     </ListView>
+                </StackPanel>
+                
+                <StackPanel >
+                    <Label Content="{x:Static localRes:Strings.ConnectionsTo}"></Label>
+                    <ListView ItemsSource="{Binding SelectedNodeModel.ConnectionsTo, UpdateSourceTrigger=PropertyChanged}" ItemContainerStyle="{StaticResource list-View-Item-Style}" Style="{StaticResource base-list-view-style}" >
+                     <ListView.View>
+                        <GridView>
+                            <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding Id, UpdateSourceTrigger=PropertyChanged}" Header="Id"/>
+                            <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding NodeB.DisplayName, UpdateSourceTrigger=PropertyChanged}" Header="Node"/>
+                            <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding B2AConnectionType.DisplayName}" Header="Connection Type"/>
+                            <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding WeightB2A, StringFormat=N2}" Header="Weight"/>
+                        </GridView>
+                     </ListView.View>
+                     </ListView>
+                </StackPanel>
+            </StackPanel>
+            
+            <Button Grid.Row="2"  Style="{StaticResource save-btn}" HorizontalAlignment="Left" Command="{Binding SaveCommand}" />
+
+        </Grid>
+    </Grid>
+</UserControl>

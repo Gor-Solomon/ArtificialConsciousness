@@ -1,0 +1,118 @@
+﻿<UserControl x:Class="AC.Desktop.Main.Views.Connections.ConnectionsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:AC.Desktop.Main.Views.Connections"
+             xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:localRes ="clr-namespace:AC.Desktop.Main.Resources.Local"
+             xmlns:res="AC.Desktop.Controls"         
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:vm="clr-namespace:AC.Desktop.Main.ViewModels.Connections"
+             mc:Ignorable="d" 
+             mah:DialogParticipation.Register="{Binding}"
+             d:DataContext="{d:DesignInstance vm:ConnectionsViewModel}"
+             d:DesignHeight="450" d:DesignWidth="900">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadControlCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <Grid >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1.5*"/>
+            <ColumnDefinition Width="3*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid Style="{StaticResource base-grid-style}">
+            <ContentControl Grid.Column="0" Content="{Binding SideBar.View}" />
+        </Grid>
+
+        <Grid Grid.Column="1" Style="{StaticResource base-grid-style}">
+            <Grid.RowDefinitions>
+                <RowDefinition  Height="*"/>
+                <RowDefinition Height="50"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Row="0" Grid.Column="0"  Margin="5"  HorizontalAlignment="Left"  Content="{x:Static localRes:Strings.Graph}" />
+                <ComboBox Grid.Row="0" Grid.Column="1"  Margin="5"  Style="{StaticResource {x:Type ComboBox}}"
+                      ItemsSource="{Binding GraphModels, UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}"
+                      SelectedValue="{Binding SelectedConnection.GraphId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,NotifyOnSourceUpdated=True,NotifyOnTargetUpdated=True}"
+                      SelectedValuePath="Id"
+                      DisplayMemberPath="DisplayName" 
+                      IsEditable="True"
+                      Width="120">
+                </ComboBox>
+
+                <Label Grid.Row="0" Grid.Column="2"  Margin="5"  HorizontalAlignment="Left"  Content="{x:Static localRes:Strings.Overwrites}" Width="100"/>
+                <TextBox Grid.Row="0" Grid.Column="3"  Margin="5"  Style="{StaticResource base-text-box-style }"
+                      Text="{Binding SelectedConnection.OverwritesId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      Width="120">
+                </TextBox>
+
+                <Label Grid.Row="1" Grid.Column="0"  Margin="5"  HorizontalAlignment="Left"  Content="{x:Static localRes:Strings.NodeA}" Width="100"/>
+                <ComboBox Grid.Row="1" Grid.Column="1"  Margin="5"  Style="{StaticResource {x:Type ComboBox}}"
+                      ItemsSource="{Binding NodeModels, UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}"
+                      SelectedValue="{Binding SelectedConnection.NodeAId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      DisplayMemberPath="DisplayName"
+                      SelectedValuePath="Id"
+                      IsEditable="True"
+                      Width="120">
+                </ComboBox>
+
+                <Label Grid.Row="2" Grid.Column="0"  Margin="5"  HorizontalAlignment="Left" Content="{x:Static localRes:Strings.AToBConnectionType}" />
+                <ComboBox Grid.Row="2" Grid.Column="1"  Margin="5"  Style="{StaticResource {x:Type ComboBox}}"
+                      ItemsSource="{Binding ConnectionTypes, UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}"
+                      SelectedValue="{Binding SelectedConnection.A2BConnectionTypeId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      DisplayMemberPath="DisplayName"
+                      SelectedValuePath="Id"
+                      IsEditable="True"
+                      Width="120">
+                </ComboBox>
+
+                <Label  Grid.Row="3" Grid.Column="0"  Margin="5"  HorizontalAlignment="Left"  Content="{x:Static localRes:Strings.WeightA2B}" />
+                <controls:NumericUpDown Grid.Row="3" Grid.Column="1"  Margin="5" NumericInputMode="Decimal" Value="{Binding SelectedConnection.WeightA2B, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  />
+
+                <Label Grid.Row="1" Grid.Column="2"  Margin="5"  HorizontalAlignment="Left"  Content="{x:Static localRes:Strings.NodeB}" />
+                <ComboBox Grid.Row="1" Grid.Column="3"  Margin="5"  Style="{StaticResource {x:Type ComboBox}}"
+                      ItemsSource="{Binding NodeModels, UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}"
+                      SelectedValue="{Binding SelectedConnection.NodeBId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      DisplayMemberPath="DisplayName"
+                      SelectedValuePath="Id"
+                      IsEditable="True"
+                      Width="120">
+                </ComboBox>
+
+                <Label Grid.Row="2" Grid.Column="2"  Margin="5"  HorizontalAlignment="Left" Content="{x:Static localRes:Strings.BToAConnectionType}" />
+                <ComboBox Grid.Row="2" Grid.Column="3"  Margin="5"  Style="{StaticResource {x:Type ComboBox}}"
+                      ItemsSource="{Binding ConnectionTypes, UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}"
+                      SelectedValue="{Binding SelectedConnection.B2AConnectionTypeId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      DisplayMemberPath="DisplayName"
+                      SelectedValuePath="Id"
+                      IsEditable="True"
+                     >
+                </ComboBox>
+
+                <Label  Grid.Row="3" Grid.Column="2"  Margin="5"  HorizontalAlignment="Left"  Content="{x:Static localRes:Strings.WeightB2A}" />
+                <controls:NumericUpDown Grid.Row="3" Grid.Column="3"  Margin="5" NumericInputMode="Decimal" Value="{Binding SelectedConnection.WeightB2A, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  />
+            </Grid>
+
+            <Button Grid.Row="1"  Style="{StaticResource save-btn}" HorizontalAlignment="Left" Command="{Binding SaveCommand}" />
+
+        </Grid>
+    </Grid>
+</UserControl>

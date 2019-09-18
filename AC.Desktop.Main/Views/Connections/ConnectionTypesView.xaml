@@ -1,0 +1,89 @@
+﻿<UserControl x:Class="AC.Desktop.Main.Views.Connections.ConnectionTypesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:AC.Desktop.Main.Views.Connections"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:vm="clr-namespace:AC.Desktop.Main.ViewModels.Connections"
+             xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:localRes ="clr-namespace:AC.Desktop.Main.Resources.Local"
+             xmlns:res="clr-namespace:AC.Desktop.Controls"         
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             mah:DialogParticipation.Register="{Binding}"
+             d:DataContext="{d:DesignInstance vm:ConnectionTypesViewModel}"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadControlCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <Grid >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1.5*"/>
+            <ColumnDefinition Width="3*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid Style="{StaticResource base-grid-style}">
+            <ContentControl Grid.Column="0" Content="{Binding SideBar.View}" />
+        </Grid>
+
+        <Grid Grid.Column="1" Style="{StaticResource base-grid-style}">
+            <Grid.RowDefinitions>
+                <RowDefinition  Height="auto"/>
+                <RowDefinition  Height="auto"/>
+                <RowDefinition  Height="auto"/>
+                <RowDefinition  Height="*"/>
+                <RowDefinition Height="50"/>
+            </Grid.RowDefinitions>
+
+
+            <StackPanel Grid.Row="0" Orientation="Horizontal" Style="{StaticResource base-panel-style}">
+                <Label Content="{x:Static localRes:Strings.ConnectionTypeName}" Width="140"/>
+                <TextBox  Style="{StaticResource rounded-text-box-style}" Text="{Binding SelectedConnectionType.Name, UpdateSourceTrigger=PropertyChanged}"/>
+            </StackPanel>
+
+            <StackPanel Grid.Row="1" Orientation="Horizontal" Style="{StaticResource base-panel-style}">
+                <Label Content="{x:Static localRes:Strings.ConnectionRule}" Width="140"/>
+                <TextBox  Style="{StaticResource rounded-text-box-style}" Text="{Binding SelectedConnectionType.ConnectionRule, UpdateSourceTrigger=PropertyChanged}" />
+            </StackPanel>
+
+            <Separator Grid.Row="2"  Margin="0 20 0 20"></Separator>
+            <Grid Grid.Row="3" Style="{StaticResource base-grid-style}">
+                <StackPanel Style="{StaticResource base-panel-style}">
+                    <TextBlock Grid.Row="0" HorizontalAlignment="Center" FontSize="15" VerticalAlignment="Center" Text="{x:Static localRes:Strings.ConnectionTypeAttribuets}" />
+                    <DataGrid CanUserSortColumns="False" CanUserDeleteRows="True"
+                          AutoGenerateColumns="False" 
+                          Style="{StaticResource data-grid-view-style}"
+                          CanUserAddRows="True"
+                          ItemsSource="{Binding SelectedConnectionType.ConnectionTypeAttributes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          >
+                        <DataGrid.Columns>
+                            <DataGridComboBoxColumn Header="{x:Static localRes:Strings.Attributes}"
+                                                Width="*"
+                                                SelectedValueBinding="{Binding Id, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                SelectedValuePath="Id"
+                                                DisplayMemberPath="DisplayName">
+                                <DataGridComboBoxColumn.ElementStyle>
+                                    <Style TargetType="{x:Type ComboBox}">
+                                        <Setter Property="ItemsSource" Value="{Binding Path=DataContext.Attribuets, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                                    </Style>
+                                </DataGridComboBoxColumn.ElementStyle>
+                                <DataGridComboBoxColumn.EditingElementStyle>
+                                    <Style TargetType="{x:Type ComboBox}">
+                                        <Setter Property="ItemsSource" Value="{Binding Path=DataContext.Attribuets, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                                    </Style>
+                                </DataGridComboBoxColumn.EditingElementStyle>
+
+                            </DataGridComboBoxColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </StackPanel>
+            </Grid>
+
+            <Button Grid.Row="4"  Style="{StaticResource save-btn}" HorizontalAlignment="Left" Command="{Binding SaveCommand}" />
+
+        </Grid>
+    </Grid>
+</UserControl>

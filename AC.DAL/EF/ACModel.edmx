@@ -1,0 +1,596 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="ACDatabaseModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="AttributeDescription">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" />
+          <Property Name="Description" Type="nvarchar" MaxLength="150" />
+        </EntityType>
+        <EntityType Name="Connection">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NodeAId" Type="int" Nullable="false" />
+          <Property Name="NodeBId" Type="int" Nullable="false" />
+          <Property Name="A2BConnectionTypeId" Type="int" Nullable="false" />
+          <Property Name="B2AConnectionTypeId" Type="int" Nullable="false" />
+          <Property Name="WeightA2B" Type="decimal" Precision="19" Scale="5" Nullable="false" />
+          <Property Name="WeightB2A" Type="decimal" Precision="19" Scale="5" Nullable="false" />
+          <Property Name="OverwritesId" Type="int" />
+          <Property Name="GraphId" Type="int" />
+        </EntityType>
+        <EntityType Name="ConnectionType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ConnectionRule" Type="nvarchar" MaxLength="2000" />
+        </EntityType>
+        <EntityType Name="ConnectionTypeAttributes">
+          <Key>
+            <PropertyRef Name="ConnectionTypeId" />
+            <PropertyRef Name="AttributeID" />
+          </Key>
+          <Property Name="ConnectionTypeId" Type="int" Nullable="false" />
+          <Property Name="AttributeID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Graph">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" />
+          <Property Name="EnteryNodeId" Type="int" />
+          <Property Name="Description" Type="nvarchar" MaxLength="150" />
+          <Property Name="IsAbstract" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Node">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="GraphId" Type="int" Nullable="false" />
+          <Property Name="Data" Type="varchar(max)" />
+        </EntityType>
+        <EntityType Name="NodeAttribute">
+          <Key>
+            <PropertyRef Name="NodeID" />
+            <PropertyRef Name="AttributeID" />
+          </Key>
+          <Property Name="NodeID" Type="int" Nullable="false" />
+          <Property Name="AttributeID" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Connection_A2BConnectionType">
+          <End Role="ConnectionType" Type="Self.ConnectionType" Multiplicity="1" />
+          <End Role="Connection" Type="Self.Connection" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ConnectionType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Connection">
+              <PropertyRef Name="A2BConnectionTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Connection_B2AConnectionType">
+          <End Role="ConnectionType" Type="Self.ConnectionType" Multiplicity="1" />
+          <End Role="Connection" Type="Self.Connection" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ConnectionType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Connection">
+              <PropertyRef Name="B2AConnectionTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Connection_ToConncection">
+          <End Role="Connection" Type="Self.Connection" Multiplicity="0..1" />
+          <End Role="Connection1" Type="Self.Connection" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Connection">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Connection1">
+              <PropertyRef Name="OverwritesId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Connection_ToGraph">
+          <End Role="Graph" Type="Self.Graph" Multiplicity="0..1" />
+          <End Role="Connection" Type="Self.Connection" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Graph">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Connection">
+              <PropertyRef Name="GraphId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Connection_ToNodeA">
+          <End Role="Node" Type="Self.Node" Multiplicity="1" />
+          <End Role="Connection" Type="Self.Connection" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Node">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Connection">
+              <PropertyRef Name="NodeAId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Connection_ToNodeB">
+          <End Role="Node" Type="Self.Node" Multiplicity="1" />
+          <End Role="Connection" Type="Self.Connection" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Node">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Connection">
+              <PropertyRef Name="NodeBId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ConnectionTypeAttributes_ToAttribute">
+          <End Role="AttributeDescription" Type="Self.AttributeDescription" Multiplicity="1" />
+          <End Role="ConnectionTypeAttributes" Type="Self.ConnectionTypeAttributes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AttributeDescription">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ConnectionTypeAttributes">
+              <PropertyRef Name="AttributeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ConnectionTypeAttributes_ToConnectionType">
+          <End Role="ConnectionType" Type="Self.ConnectionType" Multiplicity="1" />
+          <End Role="ConnectionTypeAttributes" Type="Self.ConnectionTypeAttributes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ConnectionType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ConnectionTypeAttributes">
+              <PropertyRef Name="ConnectionTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Graph_ToNode">
+          <End Role="Node" Type="Self.Node" Multiplicity="0..1" />
+          <End Role="Graph" Type="Self.Graph" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Node">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Graph">
+              <PropertyRef Name="EnteryNodeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Node_ToGraph">
+          <End Role="Graph" Type="Self.Graph" Multiplicity="1" />
+          <End Role="Node" Type="Self.Node" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Graph">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Node">
+              <PropertyRef Name="GraphId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_NodeAttribute_ToAttribute">
+          <End Role="AttributeDescription" Type="Self.AttributeDescription" Multiplicity="1" />
+          <End Role="NodeAttribute" Type="Self.NodeAttribute" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AttributeDescription">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="NodeAttribute">
+              <PropertyRef Name="AttributeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_NodeID_ToNode">
+          <End Role="Node" Type="Self.Node" Multiplicity="1" />
+          <End Role="NodeAttribute" Type="Self.NodeAttribute" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Node">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="NodeAttribute">
+              <PropertyRef Name="NodeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ACDatabaseModelStoreContainer">
+          <EntitySet Name="AttributeDescription" EntityType="Self.AttributeDescription" Schema="attributes" store:Type="Tables" />
+          <EntitySet Name="Connection" EntityType="Self.Connection" Schema="connection" store:Type="Tables" />
+          <EntitySet Name="ConnectionType" EntityType="Self.ConnectionType" Schema="connection" store:Type="Tables" />
+          <EntitySet Name="ConnectionTypeAttributes" EntityType="Self.ConnectionTypeAttributes" Schema="connection" store:Type="Tables" />
+          <EntitySet Name="Graph" EntityType="Self.Graph" Schema="graph" store:Type="Tables" />
+          <EntitySet Name="Node" EntityType="Self.Node" Schema="node" store:Type="Tables" />
+          <EntitySet Name="NodeAttribute" EntityType="Self.NodeAttribute" Schema="node" store:Type="Tables" />
+          <AssociationSet Name="FK_Connection_A2BConnectionType" Association="Self.FK_Connection_A2BConnectionType">
+            <End Role="ConnectionType" EntitySet="ConnectionType" />
+            <End Role="Connection" EntitySet="Connection" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Connection_B2AConnectionType" Association="Self.FK_Connection_B2AConnectionType">
+            <End Role="ConnectionType" EntitySet="ConnectionType" />
+            <End Role="Connection" EntitySet="Connection" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Connection_ToConncection" Association="Self.FK_Connection_ToConncection">
+            <End Role="Connection" EntitySet="Connection" />
+            <End Role="Connection1" EntitySet="Connection" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Connection_ToGraph" Association="Self.FK_Connection_ToGraph">
+            <End Role="Graph" EntitySet="Graph" />
+            <End Role="Connection" EntitySet="Connection" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Connection_ToNodeA" Association="Self.FK_Connection_ToNodeA">
+            <End Role="Node" EntitySet="Node" />
+            <End Role="Connection" EntitySet="Connection" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Connection_ToNodeB" Association="Self.FK_Connection_ToNodeB">
+            <End Role="Node" EntitySet="Node" />
+            <End Role="Connection" EntitySet="Connection" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ConnectionTypeAttributes_ToAttribute" Association="Self.FK_ConnectionTypeAttributes_ToAttribute">
+            <End Role="AttributeDescription" EntitySet="AttributeDescription" />
+            <End Role="ConnectionTypeAttributes" EntitySet="ConnectionTypeAttributes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ConnectionTypeAttributes_ToConnectionType" Association="Self.FK_ConnectionTypeAttributes_ToConnectionType">
+            <End Role="ConnectionType" EntitySet="ConnectionType" />
+            <End Role="ConnectionTypeAttributes" EntitySet="ConnectionTypeAttributes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Graph_ToNode" Association="Self.FK_Graph_ToNode">
+            <End Role="Node" EntitySet="Node" />
+            <End Role="Graph" EntitySet="Graph" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Node_ToGraph" Association="Self.FK_Node_ToGraph">
+            <End Role="Graph" EntitySet="Graph" />
+            <End Role="Node" EntitySet="Node" />
+          </AssociationSet>
+          <AssociationSet Name="FK_NodeAttribute_ToAttribute" Association="Self.FK_NodeAttribute_ToAttribute">
+            <End Role="AttributeDescription" EntitySet="AttributeDescription" />
+            <End Role="NodeAttribute" EntitySet="NodeAttribute" />
+          </AssociationSet>
+          <AssociationSet Name="FK_NodeID_ToNode" Association="Self.FK_NodeID_ToNode">
+            <End Role="Node" EntitySet="Node" />
+            <End Role="NodeAttribute" EntitySet="NodeAttribute" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ACDatabaseModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="ACDatabaseEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Connections" EntityType="ACDatabaseModel.Connection" />
+          <EntitySet Name="ConnectionTypes" EntityType="ACDatabaseModel.ConnectionType" />
+          <EntitySet Name="Graphs" EntityType="ACDatabaseModel.Graph" />
+          <EntitySet Name="Nodes" EntityType="ACDatabaseModel.Node" />
+          <AssociationSet Name="FK_Connection_A2BConnectionType" Association="ACDatabaseModel.FK_Connection_A2BConnectionType">
+            <End Role="ConnectionType" EntitySet="ConnectionTypes" />
+            <End Role="Connection" EntitySet="Connections" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Connection_B2AConnectionType" Association="ACDatabaseModel.FK_Connection_B2AConnectionType">
+            <End Role="ConnectionType" EntitySet="ConnectionTypes" />
+            <End Role="Connection" EntitySet="Connections" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Connection_ToConncection" Association="ACDatabaseModel.FK_Connection_ToConncection">
+            <End Role="Connection" EntitySet="Connections" />
+            <End Role="Connection1" EntitySet="Connections" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Connection_ToGraph" Association="ACDatabaseModel.FK_Connection_ToGraph">
+            <End Role="Graph" EntitySet="Graphs" />
+            <End Role="Connection" EntitySet="Connections" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Connection_ToNodeA" Association="ACDatabaseModel.FK_Connection_ToNodeA">
+            <End Role="Node" EntitySet="Nodes" />
+            <End Role="Connection" EntitySet="Connections" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Connection_ToNodeB" Association="ACDatabaseModel.FK_Connection_ToNodeB">
+            <End Role="Node" EntitySet="Nodes" />
+            <End Role="Connection" EntitySet="Connections" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Graph_ToNode" Association="ACDatabaseModel.FK_Graph_ToNode">
+            <End Role="Node" EntitySet="Nodes" />
+            <End Role="Graph" EntitySet="Graphs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Node_ToGraph" Association="ACDatabaseModel.FK_Node_ToGraph">
+            <End Role="Graph" EntitySet="Graphs" />
+            <End Role="Node" EntitySet="Nodes" />
+          </AssociationSet>
+          <EntitySet Name="AttributeDescriptions" EntityType="ACDatabaseModel.AttributeDescription" />
+          <AssociationSet Name="ConnectionTypeAttributes" Association="ACDatabaseModel.ConnectionTypeAttributes">
+            <End Role="AttributeDescription" EntitySet="AttributeDescriptions" />
+            <End Role="ConnectionType" EntitySet="ConnectionTypes" />
+          </AssociationSet>
+          <AssociationSet Name="NodeAttribute" Association="ACDatabaseModel.NodeAttribute">
+            <End Role="AttributeDescription" EntitySet="AttributeDescriptions" />
+            <End Role="Node" EntitySet="Nodes" />
+          </AssociationSet>
+          </EntityContainer>
+        <EntityType Name="Connection">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NodeAId" Type="Int32" Nullable="false" />
+          <Property Name="NodeBId" Type="Int32" Nullable="false" />
+          <Property Name="A2BConnectionTypeId" Type="Int32" Nullable="false" />
+          <Property Name="B2AConnectionTypeId" Type="Int32" Nullable="false" />
+          <Property Name="OverwritesId" Type="Int32" />
+          <Property Name="GraphId" Type="Int32" />
+          <NavigationProperty Name="A2BConnectionType" Relationship="ACDatabaseModel.FK_Connection_A2BConnectionType" FromRole="Connection" ToRole="ConnectionType" />
+          <NavigationProperty Name="B2AConnectionType" Relationship="ACDatabaseModel.FK_Connection_B2AConnectionType" FromRole="Connection" ToRole="ConnectionType" />
+          <NavigationProperty Name="Overwriters" Relationship="ACDatabaseModel.FK_Connection_ToConncection" FromRole="Connection" ToRole="Connection1" />
+          <NavigationProperty Name="Overwrite" Relationship="ACDatabaseModel.FK_Connection_ToConncection" FromRole="Connection1" ToRole="Connection" />
+          <NavigationProperty Name="Graph" Relationship="ACDatabaseModel.FK_Connection_ToGraph" FromRole="Connection" ToRole="Graph" />
+          <NavigationProperty Name="NodeA" Relationship="ACDatabaseModel.FK_Connection_ToNodeA" FromRole="Connection" ToRole="Node" />
+          <NavigationProperty Name="NodeB" Relationship="ACDatabaseModel.FK_Connection_ToNodeB" FromRole="Connection" ToRole="Node" />
+          <Property Name="WeightA2B" Type="Decimal" Nullable="false" Precision="19" Scale="5" />
+          <Property Name="WeightB2A" Type="Decimal" Nullable="false" Precision="19" Scale="5" />
+        </EntityType>
+        <EntityType Name="ConnectionType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="A2BConnections" Relationship="ACDatabaseModel.FK_Connection_A2BConnectionType" FromRole="ConnectionType" ToRole="Connection" />
+          <NavigationProperty Name="B2AConnections" Relationship="ACDatabaseModel.FK_Connection_B2AConnectionType" FromRole="ConnectionType" ToRole="Connection" />
+          <Property Name="ConnectionRule" Type="String" MaxLength="2000" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="ConnectionTypeAttributes" Relationship="ACDatabaseModel.ConnectionTypeAttributes" FromRole="ConnectionType" ToRole="AttributeDescription" />
+        </EntityType>
+        <EntityType Name="Graph">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="EnteryNodeId" Type="Int32" />
+          <NavigationProperty Name="Connections" Relationship="ACDatabaseModel.FK_Connection_ToGraph" FromRole="Graph" ToRole="Connection" />
+          <NavigationProperty Name="EnteryNode" Relationship="ACDatabaseModel.FK_Graph_ToNode" FromRole="Graph" ToRole="Node" />
+          <NavigationProperty Name="Nodes" Relationship="ACDatabaseModel.FK_Node_ToGraph" FromRole="Graph" ToRole="Node" />
+          <Property Name="Description" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="IsAbstract" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Node">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="GraphId" Type="Int32" Nullable="false" />
+          <Property Name="Data" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="ConnectionsFrom" Relationship="ACDatabaseModel.FK_Connection_ToNodeA" FromRole="Node" ToRole="Connection" />
+          <NavigationProperty Name="ConnectionsTo" Relationship="ACDatabaseModel.FK_Connection_ToNodeB" FromRole="Node" ToRole="Connection" />
+          <NavigationProperty Name="Graph" Relationship="ACDatabaseModel.FK_Node_ToGraph" FromRole="Node" ToRole="Graph" />
+          <NavigationProperty Name="NodeAttributes" Relationship="ACDatabaseModel.NodeAttribute" FromRole="Node" ToRole="AttributeDescription" />
+        </EntityType>
+        <Association Name="FK_Connection_A2BConnectionType">
+          <End Type="ACDatabaseModel.ConnectionType" Role="ConnectionType" Multiplicity="1" />
+          <End Type="ACDatabaseModel.Connection" Role="Connection" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ConnectionType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Connection">
+              <PropertyRef Name="A2BConnectionTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Connection_B2AConnectionType">
+          <End Type="ACDatabaseModel.ConnectionType" Role="ConnectionType" Multiplicity="1" />
+          <End Type="ACDatabaseModel.Connection" Role="Connection" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ConnectionType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Connection">
+              <PropertyRef Name="B2AConnectionTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Connection_ToConncection">
+          <End Type="ACDatabaseModel.Connection" Role="Connection" Multiplicity="0..1" />
+          <End Type="ACDatabaseModel.Connection" Role="Connection1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Connection">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Connection1">
+              <PropertyRef Name="OverwritesId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Connection_ToGraph">
+          <End Type="ACDatabaseModel.Graph" Role="Graph" Multiplicity="0..1" />
+          <End Type="ACDatabaseModel.Connection" Role="Connection" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Graph">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Connection">
+              <PropertyRef Name="GraphId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Connection_ToNodeA">
+          <End Type="ACDatabaseModel.Node" Role="Node" Multiplicity="1" />
+          <End Type="ACDatabaseModel.Connection" Role="Connection" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Node">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Connection">
+              <PropertyRef Name="NodeAId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Connection_ToNodeB">
+          <End Type="ACDatabaseModel.Node" Role="Node" Multiplicity="1" />
+          <End Type="ACDatabaseModel.Connection" Role="Connection" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Node">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Connection">
+              <PropertyRef Name="NodeBId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Graph_ToNode">
+          <End Type="ACDatabaseModel.Node" Role="Node" Multiplicity="0..1" />
+          <End Type="ACDatabaseModel.Graph" Role="Graph" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Node">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Graph">
+              <PropertyRef Name="EnteryNodeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Node_ToGraph">
+          <End Type="ACDatabaseModel.Graph" Role="Graph" Multiplicity="1" />
+          <End Type="ACDatabaseModel.Node" Role="Node" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Graph">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Node">
+              <PropertyRef Name="GraphId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="AttributeDescription">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="ConnectionTypes" Relationship="ACDatabaseModel.ConnectionTypeAttributes" FromRole="AttributeDescription" ToRole="ConnectionType" />
+          <NavigationProperty Name="Nodes" Relationship="ACDatabaseModel.NodeAttribute" FromRole="AttributeDescription" ToRole="Node" />
+          <Property Name="Description" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <Association Name="ConnectionTypeAttributes">
+          <End Type="ACDatabaseModel.AttributeDescription" Role="AttributeDescription" Multiplicity="*" />
+          <End Type="ACDatabaseModel.ConnectionType" Role="ConnectionType" Multiplicity="*" />
+        </Association>
+        <Association Name="NodeAttribute">
+          <End Type="ACDatabaseModel.AttributeDescription" Role="AttributeDescription" Multiplicity="*" />
+          <End Type="ACDatabaseModel.Node" Role="Node" Multiplicity="*" />
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ACDatabaseModelStoreContainer" CdmEntityContainer="ACDatabaseEntities">
+          <EntitySetMapping Name="Connections">
+            <EntityTypeMapping TypeName="ACDatabaseModel.Connection">
+              <MappingFragment StoreEntitySet="Connection">
+                <ScalarProperty Name="WeightB2A" ColumnName="WeightB2A" />
+                <ScalarProperty Name="WeightA2B" ColumnName="WeightA2B" />
+                <ScalarProperty Name="GraphId" ColumnName="GraphId" />
+                <ScalarProperty Name="OverwritesId" ColumnName="OverwritesId" />
+                <ScalarProperty Name="B2AConnectionTypeId" ColumnName="B2AConnectionTypeId" />
+                <ScalarProperty Name="A2BConnectionTypeId" ColumnName="A2BConnectionTypeId" />
+                <ScalarProperty Name="NodeBId" ColumnName="NodeBId" />
+                <ScalarProperty Name="NodeAId" ColumnName="NodeAId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ConnectionTypes">
+            <EntityTypeMapping TypeName="ACDatabaseModel.ConnectionType">
+              <MappingFragment StoreEntitySet="ConnectionType">
+                <ScalarProperty Name="ConnectionRule" ColumnName="ConnectionRule" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Graphs">
+            <EntityTypeMapping TypeName="ACDatabaseModel.Graph">
+              <MappingFragment StoreEntitySet="Graph">
+                <ScalarProperty Name="IsAbstract" ColumnName="IsAbstract" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="EnteryNodeId" ColumnName="EnteryNodeId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Nodes">
+            <EntityTypeMapping TypeName="ACDatabaseModel.Node">
+              <MappingFragment StoreEntitySet="Node">
+                <ScalarProperty Name="Data" ColumnName="Data" />
+                <ScalarProperty Name="GraphId" ColumnName="GraphId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AttributeDescriptions">
+            <EntityTypeMapping TypeName="ACDatabaseModel.AttributeDescription">
+              <MappingFragment StoreEntitySet="AttributeDescription">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="ConnectionTypeAttributes" TypeName="ACDatabaseModel.ConnectionTypeAttributes" StoreEntitySet="ConnectionTypeAttributes">
+            <EndProperty Name="ConnectionType">
+              <ScalarProperty Name="Id" ColumnName="ConnectionTypeId" />
+            </EndProperty>
+            <EndProperty Name="AttributeDescription">
+              <ScalarProperty Name="Id" ColumnName="AttributeID" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="NodeAttribute" TypeName="ACDatabaseModel.NodeAttribute" StoreEntitySet="NodeAttribute">
+            <EndProperty Name="Node">
+              <ScalarProperty Name="Id" ColumnName="NodeID" />
+            </EndProperty>
+            <EndProperty Name="AttributeDescription">
+              <ScalarProperty Name="Id" ColumnName="AttributeID" />
+            </EndProperty>
+          </AssociationSetMapping>
+          </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

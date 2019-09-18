@@ -1,0 +1,27 @@
+﻿<Controls:MetroWindow x:Class="AC.Desktop.Controls.Dialgo.Views.DialogView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:local="clr-namespace:AC.Desktop.Controls.Dialgo.Views"
+             mc:Ignorable="d" 
+               Title="{Binding DialogTitle}"
+        Width="{Binding DialogWidth, Mode=TwoWay}" 
+        Height="{Binding DialogHeight, Mode=TwoWay}" 
+        WindowStartupLocation="CenterScreen" ResizeMode="{Binding Resize, Mode=TwoWay}"
+        ShowCloseButton="{Binding IsCloseVisible}"
+        Icon="{StaticResource Logo}"
+        FontFamily="{StaticResource FontFamily}"
+        Background="{StaticResource WindowBackgroundBrush}"
+        WindowTitleBrush="{StaticResource TitleBrush}"
+        GlowBrush="{StaticResource TitleBrush}">
+
+    <Grid Style="{StaticResource base-grid-style}">
+        <ContentControl Margin="0"
+                        VerticalAlignment="Stretch"
+                        HorizontalAlignment="Stretch" 
+                        Content="{Binding Content.View}" />
+    </Grid>
+</Controls:MetroWindow>
+

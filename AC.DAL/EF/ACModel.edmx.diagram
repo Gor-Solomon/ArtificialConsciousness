@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="57725de42bb849338eda84f677b1daab" Name="Diagram1" ZoomLevel="139" DisplayType="false" ShowGrid="true">
+        <EntityTypeShape EntityType="ACDatabaseModel.Connection" Width="2" PointX="4.75" PointY="3" />
+        <EntityTypeShape EntityType="ACDatabaseModel.ConnectionType" Width="1.875" PointX="7.625" PointY="3" />
+        <EntityTypeShape EntityType="ACDatabaseModel.Graph" Width="1.5" PointX="2.5" PointY="7.75" />
+        <EntityTypeShape EntityType="ACDatabaseModel.Node" Width="2" PointX="4.75" PointY="7.75" />
+        <AssociationConnector Association="ACDatabaseModel.FK_Connection_A2BConnectionType" />
+        <AssociationConnector Association="ACDatabaseModel.FK_Connection_B2AConnectionType" />
+        <AssociationConnector Association="ACDatabaseModel.FK_Connection_ToConncection" />
+        <AssociationConnector Association="ACDatabaseModel.FK_Connection_ToGraph" />
+        <AssociationConnector Association="ACDatabaseModel.FK_Connection_ToNodeA" ></AssociationConnector>
+        <AssociationConnector Association="ACDatabaseModel.FK_Connection_ToNodeB" />
+        <AssociationConnector Association="ACDatabaseModel.FK_Graph_ToNode" />
+        <AssociationConnector Association="ACDatabaseModel.FK_Node_ToGraph" />
+        <EntityTypeShape EntityType="ACDatabaseModel.AttributeDescription" Width="1.875" PointX="7.625" PointY="7.75" />
+        <AssociationConnector Association="ACDatabaseModel.ConnectionTypeAttributes" />
+        <AssociationConnector Association="ACDatabaseModel.NodeAttribute" />
+        </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

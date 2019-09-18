@@ -1,0 +1,165 @@
+﻿<UserControl x:Class="AC.Desktop.Controls.SideBar.SideBarView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:extended="clr-namespace:AC.Desktop.Controls.Extensions"
+             xmlns:helpers="clr-namespace:AC.Desktop.Controls.Helpers"
+             xmlns:resx="clr-namespace:AC.Desktop.Controls.Resources"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:vm="clr-namespace:AC.Desktop.Controls.SideBar"
+             xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignData vm:SideBarViewModel}"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <Style x:Key="BoldWhenIsSelectedForView" TargetType="TextBlock">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsSelectedItemForView, Mode=TwoWay}" Value="True">
+                    <Setter Property="FontStretch" Value="UltraCondensed" />
+                    <Setter Property="FontWeight" Value="ExtraBold" />
+                    <Setter Property="FontSize" Value="20" />
+                    <Setter Property="TextBlock.FontWeight" Value="ExtraBold" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <extended:RowDefinitionExtended Height="auto" Visible="{Binding TopPanelVisible}" />
+            <extended:RowDefinitionExtended Height="auto" Visible="{Binding FilterVisible}" />
+            <RowDefinition Height="10*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <extended:ColumnDefinitionExtended Visible="{Binding CreateNewVisible}" />
+                <extended:ColumnDefinitionExtended Visible="{Binding DeleteVisible}" />
+                <extended:ColumnDefinitionExtended Visible="{Binding ImportVisible}" />
+                <extended:ColumnDefinitionExtended Visible="{Binding ClearVisible}" />
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0">
+                <Button Style="{StaticResource rounded-button-style}" Content="{x:Static resx:Strings.NewBtn}" Command="{Binding CreateNewCommand}"/>
+            </Grid>
+            <Grid Grid.Column="1">
+                <Button Style="{StaticResource rounded-button-style}" Content="{x:Static resx:Strings.DeleteBtn}" Command="{Binding DeleteCommand}" CommandParameter="{Binding SelectedItem}"/>
+            </Grid>
+            <Grid Grid.Column="2">
+                <Button Style="{StaticResource rounded-button-style}" Content="{x:Static resx:Strings.ImportBtn}" Command="{Binding ImportCommand}"/>
+            </Grid>
+            <Grid Grid.Column="3">
+                <Button Style="{StaticResource rounded-button-style}" Content="{x:Static resx:Strings.ClearBtn}" Command="{Binding ClearCommand}" />
+            </Grid>
+        </Grid>
+
+        <Grid Grid.Row="1" Style="{StaticResource base-grid-style}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Label Content="{x:Static resx:Strings.FilterByLbl}" VerticalAlignment="Center" HorizontalAlignment="Left" />
+            <TextBox Grid.Column="1"
+                     Controls:TextBoxHelper.Watermark="Name"
+                     Controls:TextBoxHelper.ClearTextButton="True" 
+                     BorderBrush="#FFA0A0A0"
+                     helpers:FocusExtensions.IsFocused="{Binding IsFilterTextFocused}"
+                     Style="{StaticResource rounded-text-box-style}" 
+                     Text="{Binding FilterText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        </Grid>
+
+        <ListView         Grid.Row="2" Width="auto" BorderBrush="AliceBlue" BorderThickness="3"
+                          ItemsSource="{Binding Items, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
+                          Style="{StaticResource base-list-view-style}">
+            <ListView.ItemContainerStyle>
+                <Style>
+                    <Style.Triggers>
+                        <!-- this customizes the foreground color when the item is selected but inactive -->
+                        <Trigger Property="Selector.IsSelected" Value="True">
+                            <Setter Property="TextElement.Foreground" Value="Blue"/>
+                            <Setter Property="TextElement.Background" Value="Red"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </ListView.ItemContainerStyle>
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseDoubleClick">
+                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type UserControl}, Mode=FindAncestor}, Path=DataContext.ItemMouseDoubleClickCommand}" CommandParameter="{Binding SelectedItem}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            <ListView.InputBindings>
+                <KeyBinding Key="Return" Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type UserControl}, Mode=FindAncestor}, Path=DataContext.EnterKeyPressedCommand}" CommandParameter="{Binding SelectedItem}" />
+            </ListView.InputBindings>
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Vertical" />
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <extended:ColumnDefinitionExtended Width="200" />
+                            <extended:ColumnDefinitionExtended Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type UserControl}, Mode=FindAncestor}, Path=DataContext.ActionsColumnWidth}" Visible="{Binding RelativeSource={RelativeSource AncestorType={x:Type UserControl}, Mode=FindAncestor}, Path=DataContext.IsActionsVisible}" />
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0" >
+                            <StackPanel Orientation="Horizontal">
+                                <Ellipse HorizontalAlignment="Left"
+                                         Style="{StaticResource new-item-indicator-ellipse}"
+                                         ToolTip="{x:Static resx:Strings.NewItem}"
+                                         Visibility="{Binding Id,Converter={StaticResource newItemIdToVisibilityConverter}}"  >
+                                </Ellipse>
+                                <TextBlock Style="{StaticResource BoldWhenIsSelectedForView}"
+                                           VerticalAlignment="Center"
+                                           Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type UserControl}, Mode=FindAncestor}, Path=DataContext.NameColumnWidth}"
+                                           TextTrimming="CharacterEllipsis"
+                                           HorizontalAlignment="Left"
+                                           Text="{Binding DisplayName}"
+                                           />
+                            </StackPanel>
+                        </Grid>
+                        <Grid HorizontalAlignment="Right" Grid.Column="1">
+                            <Grid.ColumnDefinitions>
+                                <extended:ColumnDefinitionExtended Visible="{Binding RelativeSource={RelativeSource AncestorType={x:Type UserControl}, Mode=FindAncestor}, Path=DataContext.SelectVisible}" Width="8"/>
+                                <extended:ColumnDefinitionExtended Visible="{Binding RelativeSource={RelativeSource AncestorType={x:Type UserControl}, Mode=FindAncestor}, Path=DataContext.SelectVisible}" />
+                                <extended:ColumnDefinitionExtended Visible="{Binding RelativeSource={RelativeSource AncestorType={x:Type UserControl}, Mode=FindAncestor}, Path=DataContext.ExportVisible}" Width="8"  />
+                                <extended:ColumnDefinitionExtended Visible="{Binding RelativeSource={RelativeSource AncestorType={x:Type UserControl}, Mode=FindAncestor}, Path=DataContext.ExportVisible}" />
+                                <extended:ColumnDefinitionExtended Visible="{Binding RelativeSource={RelativeSource AncestorType={x:Type UserControl}, Mode=FindAncestor}, Path=DataContext.CreateFromVisible}" Width="8"  />
+                                <extended:ColumnDefinitionExtended Visible="{Binding RelativeSource={RelativeSource AncestorType={x:Type UserControl}, Mode=FindAncestor}, Path=DataContext.CreateFromVisible}" />
+                            </Grid.ColumnDefinitions>
+                            <Button     VerticalAlignment="Center" Grid.Column="1"
+                                        IsEnabled="{Binding RelativeSource={RelativeSource AncestorType={x:Type UserControl}, Mode=FindAncestor}, Path=DataContext.IsSelectEnabled}"
+                                        Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type UserControl},Mode=FindAncestor},Path=DataContext.SelectCommand}"
+                                        CommandParameter="{Binding Id}"
+                                        Content="{x:Static resx:Strings.SelectBtn}">
+                                <Button.Style>
+                                    <Style BasedOn="{StaticResource ResourceKey=button-list-itom-action-style}" TargetType="{x:Type Button}">
+                                        <Setter Property="IsEnabled" Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type UserControl}, Mode=FindAncestor}, Path=DataContext.IsSelectEnabled}" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsSelectedItemForView, Mode=TwoWay}" Value="True">
+                                                <Setter Property="Foreground" Value="AliceBlue" />
+                                                <Setter Property="Background" Value="AliceBlue" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+
+                            <Button     HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="3"
+                                        Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type UserControl},Mode=FindAncestor},Path=DataContext.ExportCommand}"
+                                        CommandParameter="{Binding Id}"
+                                        Content="{x:Static resx:Strings.ExportBtn}"
+                                        Style="{StaticResource button-list-itom-action-style}"/>
+
+                            <Button    HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="5"
+                                        Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type UserControl},Mode=FindAncestor},Path=DataContext.CreateFromCommand}"
+                                        CommandParameter="{Binding Id}"
+                                        Content="{x:Static resx:Strings.CreateFromBtn}"
+                                        Style="{StaticResource button-list-itom-action-style}"/>
+                        </Grid>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+</UserControl>

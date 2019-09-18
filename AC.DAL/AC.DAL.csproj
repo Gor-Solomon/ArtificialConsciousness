@@ -1,0 +1,128 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{1CD15161-B846-467D-AAF9-53E372C746AC}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AC.DAL</RootNamespace>
+    <AssemblyName>AC.DAL</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Common\Implementations\DatabaseTransaction.cs" />
+    <Compile Include="Common\Interfaces\IDatabaseTransaction.cs" />
+    <Compile Include="EF\ACModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ACModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EF\ACModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ACModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EF\ACModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ACModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="EF\AttributeDescription.cs">
+      <DependentUpon>ACModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EF\Connection.cs">
+      <DependentUpon>ACModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EF\ConnectionType.cs">
+      <DependentUpon>ACModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EF\Graph.cs">
+      <DependentUpon>ACModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EF\IEntity.cs" />
+    <Compile Include="EF\Node.cs">
+      <DependentUpon>ACModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\Implementations\Attribuets\AttribuetsDescriptionRepository.cs" />
+    <Compile Include="Repositories\Implementations\BaseRepository.cs" />
+    <Compile Include="Repositories\Implementations\Connections\ConnectionRepository.cs" />
+    <Compile Include="Repositories\Implementations\Connections\ConnectionTypeRepository.cs" />
+    <Compile Include="Repositories\Implementations\Graphs\GraphRepository.cs" />
+    <Compile Include="Repositories\Implementations\Nodes\NodeRepository.cs" />
+    <Compile Include="Repositories\Interfaces\Attribuets\IAttribuetDescriptionRepository.cs" />
+    <Compile Include="Repositories\Interfaces\Connections\IConnectionTypeRepository.cs" />
+    <Compile Include="Repositories\Interfaces\Connections\IConnectionRepository.cs" />
+    <Compile Include="Repositories\Interfaces\IBaseRepository.cs" />
+    <Compile Include="Repositories\Interfaces\Graphs\IGraphRepository.cs" />
+    <Compile Include="Repositories\Interfaces\Nodes\INodeRepository.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="EF\ACModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>ACModel.edmx</DependentUpon>
+      <LastGenOutput>ACModel.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="EF\ACModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>ACModel.edmx</DependentUpon>
+      <LastGenOutput>ACModel.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <EntityDeploy Include="EF\ACModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>ACModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="EF\ACModel.edmx.diagram">
+      <DependentUpon>ACModel.edmx</DependentUpon>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
